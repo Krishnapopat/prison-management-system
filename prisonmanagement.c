@@ -219,7 +219,304 @@ int login()
     }
     return 0;
 }
+void searchRecord()
+{
+	system("cls");
+    FILE *fp ;
+	char id[16], searchRecord;
+    int recordEntry=0;
 
+    do
+	{
+	    printf("\n\n\t************************************\n");
+        printf("\t\t*THE SEARCHING MENU*");
+        printf("\n\t************************************\n\n");
+
+        fp = fopen ( "PrisonRecord", "rb" ) ;
+        recordEntry=0;
+
+        printf("\n\tEnter Prisoner ID: ");
+        scanf("%s",&id);
+
+        while (fread(&pr,sizeof(pr),1,fp) == 1)
+        {
+            if(strcmpi(pr.id,id)==0)
+            {
+                recordEntry=1;
+                printf("\n\tThe Record is: ");
+                printf("\n");
+                printf("\n\tPrisoner's Name: %s",pr.name);
+                printf("\n\tPrisoner's Gender: %s",pr.gender);
+                printf("\n\tPrisoner's Age: %s",pr.age);
+                printf("\n\tPrisoner's Weight: %s",pr.weight);
+                printf("\n\tPrisoner's Height: %s",pr.height);
+                printf("\n\tPrisoner's Crime: %s",pr.crime);
+                printf("\n\tPrisoner's Lawyer: %s",pr.lawyer);
+                printf("\n\tPrisoner's Conviction: %s",pr.punishment);
+                printf("\n\tThe Date Punishment Started at: %s",pr.punishments);
+                printf("\n\tThe Date Punishment Ends at: %s",pr.punishmente);
+                printf("\n");
+            }
+        }
+
+        if(recordEntry==0)
+            printf("\n\tThis record does not exist in the system. Please check and retry again!");
+
+        printf("\n\n\tWould you like to continue searching...(Y/N):");
+        fflush(stdin);
+        scanf("%c",&searchRecord);
+        system("cls");
+    } while(searchRecord=='Y'||searchRecord=='y');
+
+    fclose (fp) ;
+    printf("\n\n\tPress any key to exit...");
+    getch();
+    return ;
+}
+
+void viewRecord()
+{
+system("cls");
+    FILE *fp;
+
+    printf("\n\n\t************************************\n");
+    printf("\t\t*LIST OF PRISONERS*");
+    printf("\n\t************************************\n\n");
+
+    fp=fopen("PrisonRecord","rb");
+    rewind(fp);
+
+    printf("Details of Prisoners\n");
+    printf("\nID\tName\t\tGender\t\tAge\t\tWeight\t\tHeight\t\tCrime\t\tLawyer\t\tConviction\t\tPunishment Start\t\tPunishment End\n");
+
+    while((fread(&pr,sizeof(pr),1,fp))==1)
+    {
+        printf("%s",pr.id);
+        printf("\t%s",pr.name);
+        printf("\t\t%s",pr.gender);
+        printf("\t\t%s",pr.age);
+        printf("\t\t%s",pr.weight);
+        printf("\t\t%s",pr.height);
+        printf("\t\t%s",pr.crime);
+        printf("\t\t%s",pr.lawyer);
+        printf("\t\t%s",pr.punishment);
+        printf("\t\t        %s",pr.punishments);
+        printf("\t\t\t%s",pr.punishmente);
+        printf("\n");
+    }
+    fclose(fp);
+    printf("\n\n\tPRESS ANY KEY TO EXIT...");
+	getch();
+}
+void editRecord()
+{
+    system("cls");
+    FILE *fp,*ft ;
+    char id[10],editRecord;
+    int num,recordEntry=0;
+
+    do
+    {
+        system("cls");
+        printf("\n\n\t************************************\n");
+        printf("\t\t *THE EDITING MENU*");
+        printf("\n\t************************************\n\n");
+
+        recordEntry=0;
+        printf("\n\tEnter ID: ");
+        scanf("%s",&id);
+
+        fp = fopen ( "PrisonRecord", "rb+" ) ;
+        if ( fp == NULL )
+        {
+            printf( "\nRecord does not exist!!" ) ;
+            printf("\nPress any key to go back");
+            getch();
+            return;
+        }
+
+        ft=fopen("temp","wb+");
+        if(ft==NULL)
+        {
+            printf("\n\tSystem Error");
+            printf("\n\tPress any key to go back");
+            getch();
+            return;
+        }
+
+        while (fread(&pr,sizeof(pr),1,fp) == 1)
+        {
+            if(strcmp(pr.id,id)==0)
+            {
+                recordEntry=1;
+                printf("\n\t--------------------");
+                printf("\n\tTHE OLD RECORD WAS:\n");
+                printf("\t--------------------\n");
+                printf("\n\tPrisoner's Name: %s",pr.name);
+                printf("\n\tPrisoner's Gender: %s",pr.gender);
+                printf("\n\tPrisoner's Age: %s",pr.age);
+                printf("\n\tPrisoner's Weight: %s",pr.weight);
+                printf("\n\tPrisoner's Height: %s",pr.height);
+                printf("\n\tPrisoner's Crime: %s",pr.crime);
+                printf("\n\tPrisoner's Lawyer: %s",pr.lawyer);
+                printf("\n\tPrisoner's Conviction: %s",pr.punishment);
+                printf("\n\tThe Date Punishment Started at: %s",pr.punishments);
+                printf("\n\tThe Date Punishment Ends at: %s",pr.punishmente);
+                printf("\n\n\t\tWhat Would You Like To Edit...\n");
+
+                printf("\n\t1.Name");
+                printf("\n\t2.Gender");
+                printf("\n\t3.Age");
+                printf("\n\t4.Weight");
+                printf("\n\t5.Height");
+                printf("\n\t6.Crime");
+                printf("\n\t7.Lawyer");
+                printf("\n\t8.Conviction");
+                printf("\n\t9.Starting Date Of Punishment");
+                printf("\n\t10.Ending Date Of Punishment");
+                printf("\n\t11.Whole Record");
+                printf("\n\t12.Go Back To Main Menu");
+
+                do
+                {
+                    printf("\n\n\tENTER YOUR CHOICE: ");
+                    scanf("%d",&num);
+
+                    switch(num)
+                    {
+
+                    case 1:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tName: ");
+                        scanf("%s",&pr.name);
+                        break;
+
+                    case 2:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tGender: ");
+                        scanf("%s",&pr.gender);
+                        break;
+
+                    case 3:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tAge: ");
+                        scanf("%s",&pr.age);
+                        break;
+
+                    case 4:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tWeight: ");
+                        scanf("%s",&pr.weight);
+                        break;
+
+                    case 5:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tHeight: ");
+                        scanf("%s",&pr.height);
+                        break;
+
+                    case 6:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tCrime:");
+                        scanf("%s",&pr.crime);
+                        break;
+
+                    case 7:
+                        printf("Enter The New Data");
+                        printf("\nLawyer: ");
+                        scanf("%s",&pr.lawyer);
+                        break;
+
+                    case 8:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tConviction: ");
+                        scanf("%s",&pr.punishment);
+                        break;
+
+                    case 9:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tStarting Date Of Punishment: ");
+                        scanf("%s",&pr.punishments);
+                        break;
+
+                    case 10:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tEnding Date Of Punishment: ");
+                        scanf("%s",&pr.punishmente);
+                        break;
+
+                    case 11:
+                        printf("\n\tEnter The New Data");
+                        printf("\n\tName: ");
+                        scanf("%s",&pr.name);
+                        printf("\n\tGender: ");
+                        scanf("%s",&pr.gender);
+                        printf("\n\tAge: ");
+                        scanf("%s",&pr.age);
+                        printf("\n\tWeight: ");
+                        scanf("%s",&pr.weight);
+                        printf("\n\tHeight: ");
+                        scanf("%s",&pr.height);
+                        printf("\n\tCrime: ");
+                        scanf("%s",&pr.crime);
+                        printf("\n\tLawyer: ");
+                        scanf("%s",&pr.lawyer);
+                        printf("\n\tConviction: ");
+                        scanf("%s",&pr.punishment);
+                        printf("\n\tThe Date Punishment Started at: ");
+                        scanf("%s",&pr.punishments);
+                        printf("\n\tThe Date Punishment Ends at: ");
+                        scanf("%s",&pr.punishmente);
+                        break;
+
+                    case 12:
+                        printf("\n\tPress any key to go back...\n");
+                        getch();
+                        return ;
+                        break;
+
+                    default:
+                        printf("\n\tYou have typed something else...Try again\n");
+                        break;
+                    }
+
+                } while(num<1 || num>12);
+
+                system("cls");
+                printf("\n\tEDITING COMPLETED...\n\n");
+                printf("\t--------------------\n");
+                printf("\tTHE NEW RECORD IS\n");
+                printf("\t--------------------\n");
+                printf("\n\tPrisoner's Name: %s",pr.name);
+                printf("\n\tPrisoner's Gender: %s",pr.gender);
+                printf("\n\tPrisoner's Age: %s",pr.age);
+                printf("\n\tPrisoner's Weight: %s",pr.weight);
+                printf("\n\tPrisoner's Height: %s",pr.height);
+                printf("\n\tPrisoner's Crime: %s",pr.crime);
+                printf("\n\tPrisoner's Lawyer: %s",pr.lawyer);
+                printf("\n\tPrisoner's Conviction: %s",pr.punishment);
+                printf("\n\tThe Date Punishment Started at: %s",pr.punishments);
+                printf("\n\tThe Date Punishment Ends at: %s",pr.punishmente);
+            }
+            fwrite(&pr,sizeof(pr),1,ft);
+        }
+        fclose(ft);
+        fclose(fp);
+        remove("PrisonRecord");
+        rename("temp","PrisonRecord");
+
+        if(recordEntry==0)
+        {
+            printf("\n\tThe record does not exist!!\n");
+        }
+        printf("\n\n\tWould you like to edit another record...(Y/N)");
+        fflush(stdin);
+        scanf("%c",&editRecord);
+    } while(editRecord=='Y'||editRecord=='y');
+
+    printf("\n\tPress enter to exit editing menu");
+    getch();
+}
 void deleteRecord()
 {
     system("cls");
